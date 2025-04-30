@@ -1,15 +1,16 @@
 # SQL challenge Famous Paintings
 
-Idea taken from [techTFQ's youtube video](https://techtfq.com/blog/sql-project-sql-case-study-to-solve-and-practice-sql-queries)  
+## Links:
+- Idea taken from [techTFQ's youtube video](https://www.youtube.com/watch?v=AZ29DXaJ1Ts&t=147s).
+- Files and questions can be downloaded from 
+[his website](https://techtfq.com/blog/sql-project-sql-case-study-to-solve-and-practice-sql-queries).  
+- Original dataset can be downloaded from [this Kaggle's dataset link](https://www.kaggle.com/datasets/mexwell/famous-paintings)
 
-[Kaggle's dataset link](https://www.kaggle.com/datasets/mexwell/famous-paintings)
+## My work:
+The challenge consists of solving different questions about a famous paintings dataset, using SQL. I have additionally performed a data cleaning process on the datasets downloaded from the kaggle's repository. You can find the juypter notebook in the file [`data_cleaning.ipynb`](https://github.com/chusk2/SQL_challenge_paintings/blob/main/data_cleaning_notebook.ipynb). The questions can be found below. I have solved this questions and saved them in the file 
+[`SQL paintings questions.sql`](https://github.com/chusk2/SQL_challenge_paintings/blob/main/questions/SQL%20paintings%20questions.sql) under folder [`questions`](https://github.com/chusk2/SQL_challenge_paintings/tree/main/questions).
 
-The challenge consists of solving different questions about a famous paintings dataset, using SQL.  
-
-I have additionally performed a data cleaning process on the datasets downloaded from the kaggle's repository. You can find the juypter notebook in the file `data_cleaning.ipynb`.
-
-The questions can be found below. I have solved this questions and saved them in the file `SQL paintings questions.sql` under folder `questions`.
-
+## Questions:
 
 ### Solve the below SQL problems using the Famous Paintings & Museum dataset:
 
