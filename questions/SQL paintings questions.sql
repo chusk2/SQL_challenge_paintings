@@ -1,0 +1,113 @@
+-- Active: 1742240169412@@51.77.141.159@3306@paintings
+-- Solve the below SQL problems using the Famous Paintings & Museum dataset:
+
+-- 1) Fetch all the paintings which are not displayed on any museums?
+SELECT
+    name as painting_name,
+    full_name,
+    w.style
+from work w
+join artist using (artist_id)
+where museum_id IS NULL
+
+order by full_name, painting_name ;
+
+-- 2) Are there museums without any paintings?
+
+select museum_id
+from museum
+where museum_id not in (select distinct museum_id from work) ;
+
+-- 3) How many paintings have an asking price of more than their regular price?
+
+select
+    count(*)
+from product_size
+where sale_price > regular_price ;
+
+-- 4) Identify the paintings whose asking price is less than 50% of its regular price.
+
+select
+    w.work_id,
+    name as painting_name,
+    a.full_name as artist,
+    p.sale_price,
+    p.regular_price
+    
+from product_size p
+join work w using (work_id)
+join artist a using (artist_id)
+
+where sale_price < regular_price * 0.5 
+
+order by artist, painting_name, sale_price;
+
+-- 5) Which canva size costs the most?
+
+select
+    p.size_id,
+    c.width,
+    c.height,
+    p.sale_price
+from product_size p
+join canvas_size c using (size_id)
+where sale_price = (select max(sale_price) from product_size ) ;
+
+-- 6) Delete duplicate records from work, product_size, subject and image_link tables.
+-- The duplicates where removed during data cleaning, so this questions will not be answered using SQL
+
+-- 7) Identify the museums with invalid information in the given dataset.
+
+select *
+from museum
+where name || address || city || state || postal || country || phone || url is null ;
+
+-- 8) museum_Hours table has 1 invalid entry. Identify it and remove it.
+-- question already solved in the cleaning process
+
+-- 9) Fetch the top 10 most famous painting subject.
+
+select
+    subject,
+    count(*) as number_works
+from subject
+group by subject
+order by count(*) desc
+limit 10 ;
+
+-- 10) Identify the museums which are open on both Sunday and Monday.
+
+select
+    mh.museum_id,
+    m.name as museum,
+    day as weekday,
+    open as opening_time,
+    close as closing_time
+from museum_hours mh
+join museum m using (museum_id)
+where day in ('Sunday', 'Monday')
+order by 2, 3 ;
+
+-- 11) How many museums are open every single day?
+
+-- 12) Which are the top 5 most popular museum? (Popularity is defined based on most no of paintings in a museum).
+
+-- 13) Who are the top 5 most popular artist? (Popularity is defined based on most no of paintings done by an artist).
+
+-- 14) Display the 3 least popular canva sizes.
+
+-- 15) Which museum is open for the longest during a day. Dispay museum name, state and hours open and which day?
+
+-- 16) Which museum has the most no of most popular painting style?
+
+-- 17) Identify the artists whose paintings are displayed in multiple countries.
+
+/* 18) Display the country and the city with most no of museums. Output 2 separate columns to mention the city and country. If there are multiple value, separate them with comma. */
+
+/* 19) Identify the artist and the museum where the most expensive and least expensive painting is placed. Display the artist name, sale_price, painting name, museum name, museum city and canvas label. */
+
+-- 20) Which country has the 5th highest no of paintings?
+
+-- 21) Which are the 3 most popular and 3 least popular painting styles?
+
+-- 22) Which artist has the most no of Portraits paintings outside USA? Display artist name, no of paintings and the artist nationality.
