@@ -90,13 +90,65 @@ order by 2, 3 ;
 
 -- 11) How many museums are open every single day?
 
+
+select name 
+from (
+    select
+        museum_id,
+        name,
+        count(distinct day) as days_open 
+    from museum_hours
+    join museum using (museum_id)
+    group by museum_id
+    having count(day) = 7 ) as s
+order by 1;
+
 -- 12) Which are the top 5 most popular museum? (Popularity is defined based on most no of paintings in a museum).
+
+select
+    m.name as museum,
+    count(*) as number_paintings
+from work
+left join museum m using (museum_id)
+where m.name is not null
+group by 1
+order by 2 desc
+limit 5 ;
 
 -- 13) Who are the top 5 most popular artist? (Popularity is defined based on most no of paintings done by an artist).
 
+select
+    a.full_name as artist,
+    count(*) as number_paintings
+from work
+left join artist a using (artist_id)
+group by 1
+order by 2 desc
+limit 5 ;
+
 -- 14) Display the 3 least popular canva sizes.
 
--- 15) Which museum is open for the longest during a day. Dispay museum name, state and hours open and which day?
+select
+    c.size_id,
+    c.height,
+    c.width,
+    count(work_id) as number_paintings
+from product_size p
+left join canvas_size c using (size_id)
+where p.size_id is not null
+group by 1,2, 3
+order by 4
+limit 3 ;
+
+-- 15) Which museum is open for the longest during a day. Display museum name, state and hours open and which day?
+
+select
+    museum_id,
+    TIME_TO_SEC(close),
+    TIME_TO_SEC(open)
+from museum_hours ;
+
+
 
 -- 16) Which museum has the most no of most popular painting style?
 
