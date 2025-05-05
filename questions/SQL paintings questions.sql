@@ -144,19 +144,85 @@ limit 3 ;
 
 select
     museum_id,
-    TIME_TO_SEC(close),
-    TIME_TO_SEC(open)
-from museum_hours ;
-
-
+    name,
+    state,
+    day,
+    open, close,
+    round((TIME_TO_SEC(close) - TIME_TO_SEC(open) ) / 3600, 2) as hours_opened
+from museum_hours
+join museum using (museum_id)
+order by 7 desc, 1
+limit 5 ;
 
 -- 16) Which museum has the most no of most popular painting style?
 
+select style, count(*)
+from work
+where style is not null
+group by 1
+order by 2 desc
+limit 5 ;
+
 -- 17) Identify the artists whose paintings are displayed in multiple countries.
+SELECT
+    a.full_name as artist,
+    count (distinct m.country) as num_countries_museums
+    
+from work
+join museum m using (museum_id)
+join artist a using (artist_id)
+group by 1 
+having count (m.country) > 1
+order by 2 desc;
 
-/* 18) Display the country and the city with most no of museums. Output 2 separate columns to mention the city and country. If there are multiple value, separate them with comma. */
+/* 18) Display the country and the city with most no of museums.
+Output 2 separate columns to mention the city and country.
+If there are multiple value, separate them with comma. */
 
-/* 19) Identify the artist and the museum where the most expensive and least expensive painting is placed. Display the artist name, sale_price, painting name, museum name, museum city and canvas label. */
+with cte as (
+    SELECT
+        country,
+        city,
+        count(*) as museum_count
+    from museum
+    group by 1, 2
+    order by 3 desc
+    )
+select * from cte
+where museum_count = (
+    select max(museum_count) from cte
+    )
+order by 1, 2  ;
+
+/* 19) Identify the artist and the museum where the most expensive and least expensive painting is placed.
+Display the artist name, sale_price, painting name, museum name, museum city and canvas label. */
+
+with min_max_prices as (
+    select min(sale_price) as sale_price from product_size
+    UNION
+    select max(sale_price) as sale_price from product_size
+    )
+select 
+    a.full_name as artist,
+    w.name as painting,
+    m.name as museum,
+    m.city as city,
+    p.*
+from product_size p
+join work w using (work_id)
+join artist a using (artist_id)
+join museum m using (museum_id)
+ 
+where sale_price in (select * from min_max_prices ) ;
+
+
+
+select min(sale_price) as sale_price from product_size
+    UNION
+select max(sale_price) as sale_price from product_size ;
+
+selectprice;
+
 
 -- 20) Which country has the 5th highest no of paintings?
 
