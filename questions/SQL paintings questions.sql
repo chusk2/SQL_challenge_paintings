@@ -204,10 +204,10 @@ with min_max_prices as (
     )
 select 
     a.full_name as artist,
+    p.sale_price,
     w.name as painting,
     m.name as museum,
-    m.city as city,
-    p.*
+    m.city as city
 from product_size p
 join work w using (work_id)
 join artist a using (artist_id)
@@ -216,16 +216,50 @@ join museum m using (museum_id)
 where sale_price in (select * from min_max_prices ) ;
 
 
-
-select min(sale_price) as sale_price from product_size
-    UNION
-select max(sale_price) as sale_price from product_size ;
-
-selectprice;
-
-
 -- 20) Which country has the 5th highest no of paintings?
 
+select s.country, s.num_paintings
+from (
+ select
+    m.country,
+    count(w.work_id) as num_paintings,
+    row_number() over(order by count(w.work_id) desc) as _rank
+from work w
+join museum m using (museum_id)
+group by 1
+order by 2 desc
+limit 5
+) s
+where s._rank = 5 ;
+
 -- 21) Which are the 3 most popular and 3 least popular painting styles?
+with sorted_styles as (
+    select
+        style,
+        count(*) as num_paintings,
+        dense_rank() over(order by count(*) desc ) as rank_pos
+    from work
+    where style is not null
+    group by 1
+    order by 2
+)
+select rank_pos as ranking_position, style, num_paintings
+from sorted_styles
+where rank_pos <= 3 or
+    rank_pos >= (select count(*) from sorted_styles) -2
+order by rank_pos ;
+
 
 -- 22) Which artist has the most no of Portraits paintings outside USA? Display artist name, no of paintings and the artist nationality.
+
+select 
+    a.full_name as artist,
+    a.nationality,
+    count(*) as num_paintings
+from work
+join subject s using (work_id)
+join artist a using (artist_id)
+where s.subject = 'Portraits' and a.nationality != 'American'
+group by 1, 2
+order by 3 desc
+limit 1 ;
